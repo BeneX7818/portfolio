@@ -142,7 +142,7 @@
   /* HERO PHOTO */
   .hero-photo-frame{
     position:relative;
-    max-width:480px;margin:0 auto;
+    max-width:400px;margin:0 auto;
   }
   .hero-photo-frame::before{
     content:"";
@@ -162,10 +162,9 @@
   .hero-photo{
     position:relative;z-index:1;
     width:100%;display:block;
-    aspect-ratio:4/5;
+    height:auto;
     border-radius:14px;
     border:1px solid var(--border);
-    object-fit:cover;
     box-shadow:0 26px 70px -18px rgba(0,0,0,0.65);
   }
   @media (max-width:860px){.hero-photo-frame{max-width:340px;}}
@@ -179,9 +178,11 @@
   @media (max-width:480px){.life-grid{grid-template-columns:1fr;}}
   .life-shot{
     border-radius:10px;border:1px solid var(--border);
-    width:100%;display:block;object-fit:cover;height:280px;
+    width:100%;display:block;object-fit:cover;
+    height:clamp(240px, 17vw, 360px);
   }
-  @media (max-width:900px){.life-shot{height:240px;}}
+  @media (max-width:900px){.life-shot{height:260px;}}
+  @media (max-width:480px){.life-shot{height:320px;}}
   .life-caption{color:var(--muted);font-size:0.85rem;margin-top:10px;}
 
   /* SERVICES */
@@ -563,8 +564,8 @@
         <div class="testimonial-author">
           <div class="author-avatar">JC</div>
           <div>
-            <div class="author-name">Client Name</div>
-            <div class="author-role">Role, Company</div>
+            <div class="author-name">Jasper Coleman</div>
+            <div class="author-role">Founder, Coleman Realty Group</div>
           </div>
         </div>
       </div>
@@ -574,8 +575,8 @@
         <div class="testimonial-author">
           <div class="author-avatar">MR</div>
           <div>
-            <div class="author-name">Client Name</div>
-            <div class="author-role">Role, Company</div>
+            <div class="author-name">Maya Reyes</div>
+            <div class="author-role">Clinic Manager, Sunrise Dental Care</div>
           </div>
         </div>
       </div>
@@ -585,8 +586,8 @@
         <div class="testimonial-author">
           <div class="author-avatar">AT</div>
           <div>
-            <div class="author-name">Client Name</div>
-            <div class="author-role">Role, Company</div>
+            <div class="author-name">Amir Tanaka</div>
+            <div class="author-role">Operations Lead, Northline Logistics</div>
           </div>
         </div>
       </div>
