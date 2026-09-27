@@ -237,6 +237,7 @@
     width:100%;border-radius:8px;border:1px solid var(--border);display:block;
     margin-top:22px;
   }
+  .shot-carousel .shot{transition:opacity .25s ease;}
   .shot-caption{color:var(--muted);font-size:0.82rem;margin-top:8px;}
 
   /* STACK */
@@ -533,30 +534,11 @@
         <div class="case-col">
           <h4>Result</h4>
           <p>One workflow now handles routing and filing across 8 course sections, each with its own validation, upload, logging, and error-notification path.</p>
-          <img class="shot zoomable" src="workflow-overview-shot.png" alt="Full n8n workflow showing multiple room branches routed from a single form submission" onclick="openGallery('work', 0)">
-          <div class="shot-caption">Full workflow — one submission branching into 8 validated, logged, and routed outcomes.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="workflow-detail-shot.png" alt="Zoomed-in view of one branch: validate, fetch, wait for upload, upload file, log" onclick="openGallery('work', 1)">
-          <div class="shot-caption">Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="academic-workflow-overview-note.png" alt="Sticky note in n8n summarizing the Academic File Submission and Routing System: what it does, the step-by-step flow, and the tools it's built with" onclick="openGallery('work', 2)">
-          <div class="shot-caption">Workflow summary note — what it does, the step-by-step flow, and the tools it's built with.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="academic-workflow-routing-switch.png" alt="Academic Workflow Submission Form trigger feeding into a Prepare Submission Data node and a Route by Course and Section switch that branches to each room" onclick="openGallery('work', 3)">
-          <div class="shot-caption">Form trigger → Prepare Submission Data → Route by Course &amp; Section switch, branching out to each room.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="academic-workflow-rooms-6-8.png" alt="Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 6, Room 7, and Room 8" onclick="openGallery('work', 4)">
-          <div class="shot-caption">Per-room branches for Rooms 6–8 — validate, fetch, upload, log, and notify on error.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="academic-workflow-rooms-8-1.png" alt="Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 8 and Room 1" onclick="openGallery('work', 5)">
-          <div class="shot-caption">Per-room branches for Rooms 8 and 1, same validate → upload → log → notify pattern.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="academic-workflow-rooms-2-4.png" alt="Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 2 and Room 4" onclick="openGallery('work', 6)">
-          <div class="shot-caption">Per-room branches for Rooms 2 and 4.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="academic-workflow-rooms-10-11.png" alt="Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 10 and Room 11" onclick="openGallery('work', 7)">
-          <div class="shot-caption">Per-room branches for Rooms 10 and 11, rounding out all 8 sections.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+          <div class="shot-carousel" data-gallery="work">
+            <img class="shot zoomable" src="workflow-overview-shot.png" alt="Full n8n workflow showing multiple room branches routed from a single form submission" onclick="openGalleryFromCarousel(this)">
+            <div class="shot-caption">Full workflow — one submission branching into 8 validated, logged, and routed outcomes.</div>
+            <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+          </div>
         </div>
       </div>
     </div>
@@ -581,9 +563,11 @@
         <div class="case-col">
           <h4>Result</h4>
           <p>One workflow now handles ExamNet signups across all rooms, automatically filing each student into the right roster with no manual entry.</p>
-          <img class="shot zoomable" src="examnet-signup-workflow.png" alt="Automated ExamNet Signup Submission n8n workflow: Tally Trigger into a Switch node that routes to Wait and Add new record for Room steps across multiple rooms" onclick="openGallery('examnet', 0)">
-          <div class="shot-caption">Full ExamNet signup workflow — one form trigger routed and logged across every room.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+          <div class="shot-carousel" data-gallery="examnet">
+            <img class="shot zoomable" src="examnet-signup-workflow.png" alt="Automated ExamNet Signup Submission n8n workflow: Tally Trigger into a Switch node that routes to Wait and Add new record for Room steps across multiple rooms" onclick="openGalleryFromCarousel(this)">
+            <div class="shot-caption">Full ExamNet signup workflow — one form trigger routed and logged across every room.</div>
+            <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+          </div>
         </div>
       </div>
     </div>
@@ -609,9 +593,11 @@
         <div class="case-col">
           <h4>Result</h4>
           <p>Every form submission is read, classified, and acted on the same way — CRM records stay current and the first follow-up goes out automatically instead of waiting on someone to get to it.</p>
-          <img class="shot zoomable" src="crm-automation-workflow.png" alt="n8n workflow: form submission into an LLM chain with Google Gemini and a structured output parser, an If node, then HubSpot contact upsert and a Gmail follow-up" onclick="openGallery('crm', 0)">
-          <div class="shot-caption">Form submission → Gemini-powered LLM chain → If check → HubSpot contact upsert and Gmail follow-up.</div>
-          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+          <div class="shot-carousel" data-gallery="crm">
+            <img class="shot zoomable" src="crm-automation-workflow.png" alt="n8n workflow: form submission into an LLM chain with Google Gemini and a structured output parser, an If node, then HubSpot contact upsert and a Gmail follow-up" onclick="openGalleryFromCarousel(this)">
+            <div class="shot-caption">Form submission → Gemini-powered LLM chain → If check → HubSpot contact upsert and Gmail follow-up.</div>
+            <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+          </div>
         </div>
       </div>
     </div>
@@ -783,25 +769,59 @@
   // sample project belong together here.
   const galleries = {
     work: [
-      { src: 'workflow-overview-shot.png', caption: 'Full workflow — one submission branching into 8 validated, logged, and routed outcomes.' },
-      { src: 'workflow-detail-shot.png', caption: 'Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.' },
-      { src: 'academic-workflow-overview-note.png', caption: 'Workflow summary note — what it does, the step-by-step flow, and the tools it\'s built with.' },
-      { src: 'academic-workflow-routing-switch.png', caption: 'Form trigger → Prepare Submission Data → Route by Course & Section switch, branching out to each room.' },
-      { src: 'academic-workflow-rooms-6-8.png', caption: 'Per-room branches for Rooms 6–8 — validate, fetch, upload, log, and notify on error.' },
-      { src: 'academic-workflow-rooms-8-1.png', caption: 'Per-room branches for Rooms 8 and 1, same validate → upload → log → notify pattern.' },
-      { src: 'academic-workflow-rooms-2-4.png', caption: 'Per-room branches for Rooms 2 and 4.' },
-      { src: 'academic-workflow-rooms-10-11.png', caption: 'Per-room branches for Rooms 10 and 11, rounding out all 8 sections.' }
+      { src: 'workflow-overview-shot.png', alt: 'Full n8n workflow showing multiple room branches routed from a single form submission', caption: 'Full workflow — one submission branching into 8 validated, logged, and routed outcomes.' },
+      { src: 'workflow-detail-shot.png', alt: 'Zoomed-in view of one branch: validate, fetch, wait for upload, upload file, log', caption: 'Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.' },
+      { src: 'academic-workflow-overview-note.png', alt: 'Sticky note in n8n summarizing the Academic File Submission and Routing System: what it does, the step-by-step flow, and the tools it\'s built with', caption: 'Workflow summary note — what it does, the step-by-step flow, and the tools it\'s built with.' },
+      { src: 'academic-workflow-routing-switch.png', alt: 'Academic Workflow Submission Form trigger feeding into a Prepare Submission Data node and a Route by Course and Section switch that branches to each room', caption: 'Form trigger → Prepare Submission Data → Route by Course & Section switch, branching out to each room.' },
+      { src: 'academic-workflow-rooms-6-8.png', alt: 'Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 6, Room 7, and Room 8', caption: 'Per-room branches for Rooms 6–8 — validate, fetch, upload, log, and notify on error.' },
+      { src: 'academic-workflow-rooms-8-1.png', alt: 'Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 8 and Room 1', caption: 'Per-room branches for Rooms 8 and 1, same validate → upload → log → notify pattern.' },
+      { src: 'academic-workflow-rooms-2-4.png', alt: 'Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 2 and Room 4', caption: 'Per-room branches for Rooms 2 and 4.' },
+      { src: 'academic-workflow-rooms-10-11.png', alt: 'Validate, fetch, wait for upload, upload to Google Drive, log to sheet, and notify-on-error branches for Room 10 and Room 11', caption: 'Per-room branches for Rooms 10 and 11, rounding out all 8 sections.' }
     ],
     examnet: [
-      { src: 'examnet-signup-workflow.png', caption: 'Full ExamNet signup workflow — one form trigger routed and logged across every room.' }
+      { src: 'examnet-signup-workflow.png', alt: 'Automated ExamNet Signup Submission n8n workflow: Tally Trigger into a Switch node that routes to Wait and Add new record for Room steps across multiple rooms', caption: 'Full ExamNet signup workflow — one form trigger routed and logged across every room.' }
     ],
     crm: [
-      { src: 'crm-automation-workflow.png', caption: 'Form submission → Gemini-powered LLM chain → If check → HubSpot contact upsert and Gmail follow-up.' }
+      { src: 'crm-automation-workflow.png', alt: 'n8n workflow: form submission into an LLM chain with Google Gemini and a structured output parser, an If node, then HubSpot contact upsert and a Gmail follow-up', caption: 'Form submission → Gemini-powered LLM chain → If check → HubSpot contact upsert and Gmail follow-up.' }
     ]
   };
   let currentGallery = null;
   let currentIndex = 0;
   let singleItem = null;
+
+  // Auto-advancing carousel: each .shot-carousel shows one image from its
+  // gallery at a time and rotates to the next every 3 seconds. Clicking the
+  // image still opens the full lightbox gallery, starting at whatever image
+  // is currently showing.
+  function openGalleryFromCarousel(imgEl){
+    const container = imgEl.closest('.shot-carousel');
+    const key = container.dataset.gallery;
+    const index = parseInt(container.dataset.index || '0', 10);
+    openGallery(key, index);
+  }
+  function initCarousels(){
+    document.querySelectorAll('.shot-carousel').forEach(container => {
+      const key = container.dataset.gallery;
+      const items = galleries[key];
+      if(!items || items.length <= 1) return; // nothing to rotate
+      const img = container.querySelector('img.shot');
+      const caption = container.querySelector('.shot-caption');
+      let idx = 0;
+      container.dataset.index = '0';
+      setInterval(() => {
+        img.style.opacity = '0';
+        setTimeout(() => {
+          idx = (idx + 1) % items.length;
+          container.dataset.index = String(idx);
+          img.src = items[idx].src;
+          img.alt = items[idx].alt;
+          caption.textContent = items[idx].caption;
+          img.style.opacity = '1';
+        }, 250);
+      }, 3000);
+    });
+  }
+  initCarousels();
 
   const MIN_SCALE = 1;
   let maxScale = 3;       // recalculated per image so zoom never exceeds native resolution
