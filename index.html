@@ -220,6 +220,7 @@
     background:var(--surface);border:1px solid var(--border);border-radius:14px;
     overflow:hidden;
   }
+  .case-study + .case-study{margin-top:32px;}
   .case-head{padding:32px 32px 0;}
   .case-head h3{font-size:1.3rem;font-weight:600;}
   .case-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
@@ -505,12 +506,13 @@
   <div class="wrap">
     <div class="section-head">
       <div class="kicker">Sample Work</div>
-      <h2>Academic file submission &amp; routing system</h2>
-      <p>A real automation built for a school handling coursework submissions across multiple courses and sections.</p>
+      <h2>A few workflows I've built</h2>
+      <p>Real automations built for real problems — not mockups.</p>
     </div>
 
     <div class="case-study">
       <div class="case-head">
+        <div class="kicker" style="margin-bottom:6px;">Academic file submission &amp; routing system</div>
         <h3>From manual sorting to automatic routing</h3>
         <div class="case-tags">
           <span class="pill core">n8n</span>
@@ -535,6 +537,34 @@
           <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
           <img class="shot zoomable" src="workflow-detail-shot.png" alt="Zoomed-in view of one branch: validate, fetch, wait for upload, upload file, log" onclick="openGallery('work', 1)">
           <div class="shot-caption">Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.</div>
+          <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <div class="case-head">
+        <div class="kicker" style="margin-bottom:6px;">CRM automation</div>
+        <h3>Form submissions, qualified and routed by AI</h3>
+        <div class="case-tags">
+          <span class="pill core">n8n</span>
+          <span class="pill">Google Gemini</span>
+          <span class="pill">HubSpot</span>
+          <span class="pill">Gmail</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="case-col">
+          <h4>The problem</h4>
+          <p>New leads came in through a form, but someone still had to read each submission, decide if it was worth pursuing, create or update the contact in HubSpot, and send a follow-up — the kind of task that gets slower and more inconsistent as volume grows.</p>
+          <h4>The fix</h4>
+          <p>An n8n workflow triggers on form submission and runs it through an LLM chain (Google Gemini) with a structured output parser, so the model returns clean, predictable fields instead of raw text. An If node checks that output — qualified leads get automatically upserted into HubSpot as a contact and receive a follow-up message through Gmail, with no manual review needed to reach that point.</p>
+        </div>
+        <div class="case-col">
+          <h4>Result</h4>
+          <p>Every form submission is read, classified, and acted on the same way — CRM records stay current and the first follow-up goes out automatically instead of waiting on someone to get to it.</p>
+          <img class="shot zoomable" src="crm-automation-workflow.png" alt="n8n workflow: form submission into an LLM chain with Google Gemini and a structured output parser, an If node, then HubSpot contact upsert and a Gmail follow-up" onclick="openGallery('crm', 0)">
+          <div class="shot-caption">Form submission → Gemini-powered LLM chain → If check → HubSpot contact upsert and Gmail follow-up.</div>
           <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
         </div>
       </div>
@@ -709,6 +739,9 @@
     work: [
       { src: 'workflow-overview-shot.png', caption: 'Full workflow — one submission branching into 8 validated, logged, and routed outcomes.' },
       { src: 'workflow-detail-shot.png', caption: 'Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.' }
+    ],
+    crm: [
+      { src: 'crm-automation-workflow.png', caption: 'Form submission → Gemini-powered LLM chain → If check → HubSpot contact upsert and Gmail follow-up.' }
     ]
   };
   let currentGallery = null;
