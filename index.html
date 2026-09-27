@@ -35,9 +35,11 @@
     letter-spacing:-0.01em;
   }
   a{color:inherit;}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px;}
+  @media (min-width:1440px){.wrap{max-width:1400px;}}
   section{padding:96px 0;}
   @media (max-width:640px){section{padding:64px 0;}}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
 
   /* NAV */
   header{
@@ -87,7 +89,7 @@
   /* HERO */
   .hero{padding-top:72px;padding-bottom:64px;}
   .hero-grid{
-    display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center;
+    display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center;
   }
   @media (max-width:860px){.hero-grid{grid-template-columns:1fr;text-align:center;}}
   .avail-pill{
@@ -140,34 +142,46 @@
   /* HERO PHOTO */
   .hero-photo-frame{
     position:relative;
-    max-width:360px;margin:0 auto;
+    max-width:480px;margin:0 auto;
   }
   .hero-photo-frame::before{
     content:"";
-    position:absolute;inset:-14px;
+    position:absolute;inset:-16px;
     border:1px solid var(--accent-dim);
-    border-radius:16px;
+    border-radius:20px;
     z-index:0;
+  }
+  .hero-photo-frame::after{
+    content:"";
+    position:absolute;inset:-16px;
+    border-radius:20px;
+    z-index:0;
+    background:radial-gradient(60% 60% at 50% 30%, rgba(245,166,35,0.16), transparent 70%);
+    filter:blur(6px);
   }
   .hero-photo{
     position:relative;z-index:1;
     width:100%;display:block;
-    border-radius:12px;
+    aspect-ratio:4/5;
+    border-radius:14px;
     border:1px solid var(--border);
     object-fit:cover;
-    box-shadow:0 20px 60px -20px rgba(0,0,0,0.6);
+    box-shadow:0 26px 70px -18px rgba(0,0,0,0.65);
   }
+  @media (max-width:860px){.hero-photo-frame{max-width:340px;}}
 
   /* ABOUT PHOTOS */
   .life-grid{
-    display:grid;grid-template-columns:1fr 1fr;gap:20px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
     margin-top:40px;
   }
-  @media (max-width:640px){.life-grid{grid-template-columns:1fr;}}
+  @media (max-width:900px){.life-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:480px){.life-grid{grid-template-columns:1fr;}}
   .life-shot{
     border-radius:10px;border:1px solid var(--border);
     width:100%;display:block;object-fit:cover;height:280px;
   }
+  @media (max-width:900px){.life-shot{height:240px;}}
   .life-caption{color:var(--muted);font-size:0.85rem;margin-top:10px;}
 
   /* SERVICES */
@@ -208,8 +222,8 @@
   .case-head{padding:32px 32px 0;}
   .case-head h3{font-size:1.3rem;font-weight:600;}
   .case-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-  .case-body{padding:24px 32px 32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;}
-  @media (max-width:780px){.case-body{grid-template-columns:1fr;}}
+  .case-body{padding:24px 32px 32px;display:grid;grid-template-columns:0.85fr 1.15fr;gap:28px;}
+  @media (max-width:940px){.case-body{grid-template-columns:1fr;}}
   .case-col h4{
     font-size:0.78rem;text-transform:none;color:var(--accent);
     font-weight:600;margin:0 0 8px;
@@ -232,7 +246,7 @@
 
   /* ABOUT */
   .about-grid{
-    display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:start;
+    display:grid;grid-template-columns:1.25fr 0.85fr;gap:56px;align-items:start;
   }
   @media (max-width:780px){.about-grid{grid-template-columns:1fr;}}
   .about-grid p{color:var(--muted);margin:0 0 14px;}
@@ -244,6 +258,29 @@
   .about-card .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.92rem;}
   .about-card .row:last-child{border-bottom:none;}
   .about-card .row span:first-child{color:var(--muted);}
+
+  /* TESTIMONIALS */
+  .testimonial-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  @media (max-width:940px){.testimonial-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:640px){.testimonial-grid{grid-template-columns:1fr;}}
+  .testimonial-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:28px;display:flex;flex-direction:column;
+  }
+  .stars{color:var(--accent);font-size:1.05rem;letter-spacing:3px;margin-bottom:16px;}
+  .stars .dim{color:var(--wire);}
+  .testimonial-quote{color:var(--text);font-size:0.95rem;line-height:1.65;flex-grow:1;margin:0 0 24px;}
+  .testimonial-author{display:flex;align-items:center;gap:12px;}
+  .author-avatar{
+    width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(150deg,var(--accent),var(--accent-dim));
+    color:#171200;display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk';font-weight:700;font-size:0.82rem;
+  }
+  .author-name{font-weight:600;font-size:0.92rem;}
+  .author-role{color:var(--muted);font-size:0.82rem;margin-top:2px;}
 
   /* CONTACT */
   .contact{
@@ -360,6 +397,7 @@
       <li><a href="#process">How I Work</a></li>
       <li><a href="#work">Sample Work</a></li>
       <li><a href="#stack">Tools</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -511,6 +549,51 @@
   </div>
 </section>
 
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Client Feedback</div>
+      <h2>What clients say</h2>
+      <p>Replace these with real quotes and ratings from your own clients as they come in.</p>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="testimonial-quote">Dexter mapped our lead intake in a day and had it fully automated by the end of the week. We haven't manually sorted a form submission since.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JC</div>
+          <div>
+            <div class="author-name">Client Name</div>
+            <div class="author-role">Role, Company</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="testimonial-quote">Clear communication from the first call, and he explained exactly how the workflow worked so our team could maintain it ourselves.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">MR</div>
+          <div>
+            <div class="author-name">Client Name</div>
+            <div class="author-role">Role, Company</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars" aria-label="4.5 out of 5 stars">★★★★<span class="dim">★</span></div>
+        <p class="testimonial-quote">Inherited a broken Zapier setup and Dexter rebuilt it properly, with error notifications we never had before. Would hire again.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AT</div>
+          <div>
+            <div class="author-name">Client Name</div>
+            <div class="author-role">Role, Company</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="about">
   <div class="wrap about-grid">
     <div>
@@ -526,6 +609,10 @@
         <div>
           <img class="life-shot zoomable" src="home-office.jpg" alt="Dexter at his home desk setup debugging a workflow" onclick="openLightbox(this.src, this.alt)">
           <div class="life-caption">Home base for the deep work — this is where automations actually get built, tested, and debugged.</div>
+        </div>
+        <div>
+          <img class="life-shot zoomable" src="hotel.jpg" alt="Dexter working on a laptop in a hotel lobby lounge" onclick="openLightbox(this.src, this.alt)">
+          <div class="life-caption">Working from a hotel lounge on a client trip — the setup changes, the workflow habits don't.</div>
         </div>
       </div>
     </div>
