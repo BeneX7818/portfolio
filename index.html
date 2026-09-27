@@ -298,10 +298,28 @@
     display:flex;align-items:center;justify-content:center;
   }
   .lightbox-close:hover{border-color:var(--accent);color:var(--accent);}
+  .lightbox-nav{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    width:46px;height:46px;border-radius:50%;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox-nav svg{width:20px;height:20px;}
+  .lightbox-nav:hover{border-color:var(--accent);color:var(--accent);}
+  .lightbox-nav.hidden{display:none;}
+  .lightbox-prev{left:16px;}
+  .lightbox-next{right:16px;}
   .lightbox-caption{
     position:absolute;bottom:26px;left:0;right:0;text-align:center;
     color:var(--muted);font-size:0.85rem;padding:0 20px;pointer-events:none;
   }
+  .lightbox-counter{
+    position:absolute;top:26px;left:50%;transform:translateX(-50%);
+    color:var(--muted);font-size:0.8rem;background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:5px 14px;
+    display:none;
+  }
+  .lightbox-counter.visible{display:block;}
   .lightbox-zoom-controls{
     position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
     display:flex;align-items:center;gap:2px;z-index:2;
@@ -319,8 +337,15 @@
     min-width:52px;text-align:center;color:var(--muted);font-size:0.82rem;font-variant-numeric:tabular-nums;
   }
   @media (max-width:640px){
+    .lightbox{padding:16px;}
     .lightbox-caption{display:none;}
-    .lightbox-zoom-controls{bottom:18px;}
+    .lightbox-zoom-controls{bottom:14px;}
+    .lightbox-nav{width:38px;height:38px;}
+    .lightbox-nav svg{width:16px;height:16px;}
+    .lightbox-prev{left:8px;}
+    .lightbox-next{right:8px;}
+    .lightbox-close{width:36px;height:36px;top:12px;right:12px;font-size:1.1rem;}
+    .lightbox-counter{top:12px;font-size:0.75rem;padding:4px 12px;}
   }
 </style>
 </head>
@@ -452,10 +477,10 @@
         <div class="case-col">
           <h4>Result</h4>
           <p>One workflow now handles routing and filing across 8 course sections, each with its own validation, upload, logging, and error-notification path.</p>
-          <img class="shot zoomable" src="workflow-overview-shot.png" alt="Full n8n workflow showing multiple room branches routed from a single form submission" onclick="openLightbox(this.src, this.alt)">
+          <img class="shot zoomable" src="workflow-overview-shot.png" alt="Full n8n workflow showing multiple room branches routed from a single form submission" onclick="openGallery('work', 0)">
           <div class="shot-caption">Full workflow — one submission branching into 8 validated, logged, and routed outcomes.</div>
           <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
-          <img class="shot zoomable" src="workflow-detail-shot.png" alt="Zoomed-in view of one branch: validate, fetch, wait for upload, upload file, log" onclick="openLightbox(this.src, this.alt)">
+          <img class="shot zoomable" src="workflow-detail-shot.png" alt="Zoomed-in view of one branch: validate, fetch, wait for upload, upload file, log" onclick="openGallery('work', 1)">
           <div class="shot-caption">Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.</div>
           <div class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Click to view full resolution</div>
         </div>
@@ -539,10 +564,17 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
   <div class="lightbox-img-wrap" id="lightboxImgWrap">
     <img id="lightboxImg" src="" alt="">
   </div>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </button>
   <div class="lightbox-caption" id="lightboxCaption"></div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
   <div class="lightbox-zoom-controls">
     <button id="zoomOutBtn" aria-label="Zoom out">−</button>
     <span class="lightbox-zoom-level" id="zoomLevel">100%</span>
@@ -560,16 +592,33 @@
   const lightboxImgWrap = document.getElementById('lightboxImgWrap');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxCaption = document.getElementById('lightboxCaption');
+  const lightboxCounter = document.getElementById('lightboxCounter');
   const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
   const zoomInBtn = document.getElementById('zoomInBtn');
   const zoomOutBtn = document.getElementById('zoomOutBtn');
   const zoomLevel = document.getElementById('zoomLevel');
+
+  // Image sets a lightbox can page through with Next/Back. Kept separate from
+  // the personal photos on purpose — only the workflow screenshots for this
+  // sample project belong together here.
+  const galleries = {
+    work: [
+      { src: 'workflow-overview-shot.png', caption: 'Full workflow — one submission branching into 8 validated, logged, and routed outcomes.' },
+      { src: 'workflow-detail-shot.png', caption: 'Zoomed in on one branch — validate → fetch → wait → upload/log → notify on error.' }
+    ]
+  };
+  let currentGallery = null;
+  let currentIndex = 0;
+  let singleItem = null;
 
   const MIN_SCALE = 1;
   let maxScale = 3;       // recalculated per image so zoom never exceeds native resolution
   let scale = 1, panX = 0, panY = 0;
   let isPanning = false, startX = 0, startY = 0;
   let pinchStartDist = 0, pinchStartScale = 1;
+  let isSwiping = false, swipeStartX = 0, swipeStartY = 0, justSwiped = false;
 
   function applyTransform(){
     lightboxImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
@@ -582,7 +631,6 @@
   function clampPan(){
     const wrapRect = lightboxImgWrap.getBoundingClientRect();
     const imgRect = lightboxImg.getBoundingClientRect();
-    // How far the scaled image overflows the wrap, per side
     const overflowX = Math.max(0, (imgRect.width - wrapRect.width) / 2);
     const overflowY = Math.max(0, (imgRect.height - wrapRect.height) / 2);
     panX = Math.min(overflowX, Math.max(-overflowX, panX));
@@ -594,7 +642,6 @@
     scale = Math.min(maxScale, Math.max(MIN_SCALE, next));
     if(scale === MIN_SCALE){ panX = 0; panY = 0; }
     else if(focal){
-      // keep the point under the cursor/fingers roughly stationary while zooming
       const ratio = scale / prevScale;
       panX = focal.x - (focal.x - panX) * ratio;
       panY = focal.y - (focal.y - panY) * ratio;
@@ -603,31 +650,80 @@
     requestAnimationFrame(clampPan);
   }
 
-  function openLightbox(src, caption){
-    lightboxImg.src = src;
-    lightboxImg.alt = caption || '';
-    lightboxCaption.textContent = caption || '';
+  // Re-measure how far the image can zoom before it exceeds its native pixel
+  // resolution. Re-run on open and on any resize/orientation change so the
+  // limit stays correct whether the person is on a phone or a wide desktop.
+  function recalcMaxScale(){
+    if(!lightboxImg.naturalWidth) return;
+    const prevTransform = lightboxImg.style.transform;
+    lightboxImg.style.transform = 'none';
+    const displayedWidth = lightboxImg.getBoundingClientRect().width || 1;
+    maxScale = Math.max(1.5, lightboxImg.naturalWidth / displayedWidth);
+    lightboxImg.style.transform = prevTransform;
+    if(scale > maxScale) scale = maxScale;
+    applyTransform();
+  }
+
+  function currentItem(){
+    return currentGallery ? currentGallery[currentIndex] : singleItem;
+  }
+
+  function renderLightboxImage(){
+    const item = currentItem();
+    if(!item) return;
+    scale = 1; panX = 0; panY = 0;
+    lightboxImg.src = item.src;
+    lightboxImg.alt = item.caption || '';
+    lightboxCaption.textContent = item.caption || '';
+    applyTransform();
+
+    const hasMultiple = currentGallery && currentGallery.length > 1;
+    lightboxPrev.classList.toggle('hidden', !hasMultiple);
+    lightboxNext.classList.toggle('hidden', !hasMultiple);
+    lightboxCounter.classList.toggle('visible', hasMultiple);
+    if(hasMultiple) lightboxCounter.textContent = (currentIndex + 1) + ' / ' + currentGallery.length;
+  }
+
+  function navigate(delta){
+    if(!currentGallery) return;
+    currentIndex = (currentIndex + delta + currentGallery.length) % currentGallery.length;
+    renderLightboxImage();
+  }
+
+  function openLightboxCommon(){
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
-    scale = 1; panX = 0; panY = 0;
-    applyTransform();
+    renderLightboxImage();
+  }
+  function openLightbox(src, caption){
+    currentGallery = null;
+    singleItem = { src, caption };
+    openLightboxCommon();
+  }
+  function openGallery(key, index){
+    currentGallery = galleries[key];
+    currentIndex = index || 0;
+    openLightboxCommon();
   }
   function closeLightbox(){
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
     lightboxImg.src = '';
   }
-  lightboxImg.addEventListener('load', () => {
-    // Cap zoom at the image's true native resolution (1:1 pixels) so it never blurs.
-    const displayedWidth = lightboxImg.getBoundingClientRect().width || 1;
-    maxScale = Math.max(1.5, lightboxImg.naturalWidth / displayedWidth);
-    scale = 1; panX = 0; panY = 0;
-    applyTransform();
-  });
+  lightboxImg.addEventListener('load', recalcMaxScale);
+  window.addEventListener('resize', () => { if(lightbox.classList.contains('active')) recalcMaxScale(); });
+  window.addEventListener('orientationchange', () => { if(lightbox.classList.contains('active')) recalcMaxScale(); });
 
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
+  lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
+  lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
+  document.addEventListener('keydown', (e) => {
+    if(!lightbox.classList.contains('active')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowRight') navigate(1);
+    if(e.key === 'ArrowLeft') navigate(-1);
+  });
 
   zoomInBtn.addEventListener('click', () => setScale(scale + 0.5));
   zoomOutBtn.addEventListener('click', () => setScale(scale - 0.5));
@@ -635,6 +731,7 @@
   // Click image: zoom in toward click point, or back out to fit if already zoomed
   lightboxImg.addEventListener('click', (e) => {
     e.stopPropagation();
+    if(justSwiped) return;
     if(scale > 1){ setScale(1); return; }
     const rect = lightboxImgWrap.getBoundingClientRect();
     const focal = { x: e.clientX - (rect.left + rect.width/2), y: e.clientY - (rect.top + rect.height/2) };
@@ -668,7 +765,8 @@
     lightboxImg.classList.remove('panning');
   });
 
-  // Touch: pinch to zoom, one-finger drag to pan
+  // Touch: pinch to zoom, one-finger drag to pan when zoomed,
+  // one-finger swipe to move between images in a gallery when not zoomed.
   function touchDist(t0, t1){
     return Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
   }
@@ -676,9 +774,14 @@
     if(e.touches.length === 2){
       pinchStartDist = touchDist(e.touches[0], e.touches[1]);
       pinchStartScale = scale;
-    } else if(e.touches.length === 1 && scale > 1){
-      isPanning = true;
-      startX = e.touches[0].clientX - panX; startY = e.touches[0].clientY - panY;
+    } else if(e.touches.length === 1){
+      if(scale > 1){
+        isPanning = true;
+        startX = e.touches[0].clientX - panX; startY = e.touches[0].clientY - panY;
+      } else if(currentGallery && currentGallery.length > 1){
+        isSwiping = true;
+        swipeStartX = e.touches[0].clientX; swipeStartY = e.touches[0].clientY;
+      }
     }
   }, { passive:true });
   lightboxImgWrap.addEventListener('touchmove', (e) => {
@@ -692,7 +795,19 @@
       applyTransform();
     }
   }, { passive:false });
-  lightboxImgWrap.addEventListener('touchend', () => { isPanning = false; });
+  lightboxImgWrap.addEventListener('touchend', (e) => {
+    isPanning = false;
+    if(isSwiping){
+      const t = e.changedTouches[0];
+      const dx = t.clientX - swipeStartX, dy = t.clientY - swipeStartY;
+      if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5){
+        navigate(dx < 0 ? 1 : -1);
+        justSwiped = true;
+        setTimeout(() => { justSwiped = false; }, 300);
+      }
+      isSwiping = false;
+    }
+  });
 </script>
 </body>
 </html>
