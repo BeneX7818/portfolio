@@ -267,20 +267,31 @@
   }
   .zoom-hint svg{width:13px;height:13px;flex-shrink:0;}
   .lightbox{
-    position:fixed;inset:0;z-index:100;
+    position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;
     background:rgba(8,9,12,0.92);
     display:none;align-items:center;justify-content:center;
     padding:40px;
     backdrop-filter:blur(2px);
   }
   .lightbox.active{display:flex;}
-  .lightbox img{
+  .lightbox-img-wrap{
+    position:relative;width:100%;height:100%;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;touch-action:none;
+  }
+  .lightbox-img-wrap img{
     max-width:100%;max-height:100%;
     border-radius:8px;border:1px solid var(--border);
     box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
+    cursor:zoom-in;
+    image-rendering:auto;
+    user-select:none;-webkit-user-drag:none;
+    will-change:transform;
   }
+  .lightbox-img-wrap img.zoomed{cursor:grab;}
+  .lightbox-img-wrap img.panning{cursor:grabbing;}
   .lightbox-close{
-    position:absolute;top:22px;right:28px;
+    position:absolute;top:22px;right:28px;z-index:2;
     width:42px;height:42px;border-radius:50%;
     background:var(--surface);border:1px solid var(--border);color:var(--text);
     font-size:1.3rem;line-height:1;cursor:pointer;
@@ -289,7 +300,27 @@
   .lightbox-close:hover{border-color:var(--accent);color:var(--accent);}
   .lightbox-caption{
     position:absolute;bottom:26px;left:0;right:0;text-align:center;
-    color:var(--muted);font-size:0.85rem;padding:0 20px;
+    color:var(--muted);font-size:0.85rem;padding:0 20px;pointer-events:none;
+  }
+  .lightbox-zoom-controls{
+    position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    display:flex;align-items:center;gap:2px;z-index:2;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:4px;
+  }
+  .lightbox-zoom-controls button{
+    width:36px;height:36px;border-radius:7px;border:none;
+    background:transparent;color:var(--text);font-size:1.1rem;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox-zoom-controls button:hover{background:var(--surface-2);color:var(--accent);}
+  .lightbox-zoom-controls button:disabled{opacity:0.35;cursor:default;background:transparent;color:var(--text);}
+  .lightbox-zoom-level{
+    min-width:52px;text-align:center;color:var(--muted);font-size:0.82rem;font-variant-numeric:tabular-nums;
+  }
+  @media (max-width:640px){
+    .lightbox-caption{display:none;}
+    .lightbox-zoom-controls{bottom:18px;}
   }
 </style>
 </head>
@@ -508,8 +539,15 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
-  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-img-wrap" id="lightboxImgWrap">
+    <img id="lightboxImg" src="" alt="">
+  </div>
   <div class="lightbox-caption" id="lightboxCaption"></div>
+  <div class="lightbox-zoom-controls">
+    <button id="zoomOutBtn" aria-label="Zoom out">−</button>
+    <span class="lightbox-zoom-level" id="zoomLevel">100%</span>
+    <button id="zoomInBtn" aria-label="Zoom in">+</button>
+  </div>
 </div>
 
 <script>
@@ -519,9 +557,51 @@
   navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navMenu.classList.remove('open')));
 
   const lightbox = document.getElementById('lightbox');
+  const lightboxImgWrap = document.getElementById('lightboxImgWrap');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxCaption = document.getElementById('lightboxCaption');
   const lightboxClose = document.getElementById('lightboxClose');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const zoomLevel = document.getElementById('zoomLevel');
+
+  const MIN_SCALE = 1;
+  let maxScale = 3;       // recalculated per image so zoom never exceeds native resolution
+  let scale = 1, panX = 0, panY = 0;
+  let isPanning = false, startX = 0, startY = 0;
+  let pinchStartDist = 0, pinchStartScale = 1;
+
+  function applyTransform(){
+    lightboxImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    lightboxImg.classList.toggle('zoomed', scale > 1);
+    zoomLevel.textContent = Math.round(scale * 100) + '%';
+    zoomOutBtn.disabled = scale <= MIN_SCALE;
+    zoomInBtn.disabled = scale >= maxScale;
+  }
+
+  function clampPan(){
+    const wrapRect = lightboxImgWrap.getBoundingClientRect();
+    const imgRect = lightboxImg.getBoundingClientRect();
+    // How far the scaled image overflows the wrap, per side
+    const overflowX = Math.max(0, (imgRect.width - wrapRect.width) / 2);
+    const overflowY = Math.max(0, (imgRect.height - wrapRect.height) / 2);
+    panX = Math.min(overflowX, Math.max(-overflowX, panX));
+    panY = Math.min(overflowY, Math.max(-overflowY, panY));
+  }
+
+  function setScale(next, focal){
+    const prevScale = scale;
+    scale = Math.min(maxScale, Math.max(MIN_SCALE, next));
+    if(scale === MIN_SCALE){ panX = 0; panY = 0; }
+    else if(focal){
+      // keep the point under the cursor/fingers roughly stationary while zooming
+      const ratio = scale / prevScale;
+      panX = focal.x - (focal.x - panX) * ratio;
+      panY = focal.y - (focal.y - panY) * ratio;
+    }
+    applyTransform();
+    requestAnimationFrame(clampPan);
+  }
 
   function openLightbox(src, caption){
     lightboxImg.src = src;
@@ -529,15 +609,90 @@
     lightboxCaption.textContent = caption || '';
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
+    scale = 1; panX = 0; panY = 0;
+    applyTransform();
   }
   function closeLightbox(){
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
     lightboxImg.src = '';
   }
+  lightboxImg.addEventListener('load', () => {
+    // Cap zoom at the image's true native resolution (1:1 pixels) so it never blurs.
+    const displayedWidth = lightboxImg.getBoundingClientRect().width || 1;
+    maxScale = Math.max(1.5, lightboxImg.naturalWidth / displayedWidth);
+    scale = 1; panX = 0; panY = 0;
+    applyTransform();
+  });
+
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
+
+  zoomInBtn.addEventListener('click', () => setScale(scale + 0.5));
+  zoomOutBtn.addEventListener('click', () => setScale(scale - 0.5));
+
+  // Click image: zoom in toward click point, or back out to fit if already zoomed
+  lightboxImg.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if(scale > 1){ setScale(1); return; }
+    const rect = lightboxImgWrap.getBoundingClientRect();
+    const focal = { x: e.clientX - (rect.left + rect.width/2), y: e.clientY - (rect.top + rect.height/2) };
+    setScale(Math.min(maxScale, 2), focal);
+  });
+
+  // Scroll wheel zoom, centered on cursor
+  lightboxImgWrap.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = lightboxImgWrap.getBoundingClientRect();
+    const focal = { x: e.clientX - (rect.left + rect.width/2), y: e.clientY - (rect.top + rect.height/2) };
+    const delta = e.deltaY < 0 ? 0.35 : -0.35;
+    setScale(scale + delta, focal);
+  }, { passive:false });
+
+  // Drag to pan when zoomed in
+  lightboxImg.addEventListener('mousedown', (e) => {
+    if(scale <= 1) return;
+    isPanning = true;
+    startX = e.clientX - panX; startY = e.clientY - panY;
+    lightboxImg.classList.add('panning');
+  });
+  window.addEventListener('mousemove', (e) => {
+    if(!isPanning) return;
+    panX = e.clientX - startX; panY = e.clientY - startY;
+    clampPan();
+    applyTransform();
+  });
+  window.addEventListener('mouseup', () => {
+    isPanning = false;
+    lightboxImg.classList.remove('panning');
+  });
+
+  // Touch: pinch to zoom, one-finger drag to pan
+  function touchDist(t0, t1){
+    return Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+  }
+  lightboxImgWrap.addEventListener('touchstart', (e) => {
+    if(e.touches.length === 2){
+      pinchStartDist = touchDist(e.touches[0], e.touches[1]);
+      pinchStartScale = scale;
+    } else if(e.touches.length === 1 && scale > 1){
+      isPanning = true;
+      startX = e.touches[0].clientX - panX; startY = e.touches[0].clientY - panY;
+    }
+  }, { passive:true });
+  lightboxImgWrap.addEventListener('touchmove', (e) => {
+    if(e.touches.length === 2){
+      e.preventDefault();
+      const dist = touchDist(e.touches[0], e.touches[1]);
+      setScale(pinchStartScale * (dist / pinchStartDist));
+    } else if(e.touches.length === 1 && isPanning){
+      panX = e.touches[0].clientX - startX; panY = e.touches[0].clientY - startY;
+      clampPan();
+      applyTransform();
+    }
+  }, { passive:false });
+  lightboxImgWrap.addEventListener('touchend', () => { isPanning = false; });
 </script>
 </body>
 </html>
